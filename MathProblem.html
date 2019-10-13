@@ -1,0 +1,164 @@
+<html>
+<head><title>Math</title></head>
+
+<body>
+
+<h2 align='center'>
+Question <label id='qNum'>0</label> 
+</h2>
+
+<h2 align='center'>
+  <label id='num1'>num1</label>	<label id='operator'> - </label> <label id='num2'>num1</label>	= 
+  <input type="text" id="num3" />
+  <input type="submit" value="Ok" id="ok" onClick="calNumber()" />
+</h2>
+
+<h4 id="display" align='center'></h4>
+<h4 align='center'><label id='point'>0</label> Point(s)  <font color='blue'><label id='timer'></label></font></h4>
+<hr/>
+<p align='center' id="record"></p>
+
+<script type="text/javascript">
+
+var operator = 2;
+var timer    = 30;
+
+function calNumber()	
+{
+        var qNum = parseInt(document.getElementById("qNum").innerHTML);
+        var num1 = parseInt(document.getElementById("num1").innerHTML);
+        var num2 = parseInt(document.getElementById("num2").innerHTML);
+        var num3 = parseInt(document.getElementById("num3").value);     
+
+        var result = num1 - num2;
+
+	switch(operator)
+	{	
+		case 1:	result = num1 + num2;	break;	
+		case 2:	result = num1 - num2;	break;	
+		case 3:	result = num1 * num2;	break;	
+		case 4:	result = num1 / num2;	break;	
+	}
+
+	if (result == num3){
+		document.getElementById("display").innerHTML = "<font color='blue'>Good Job!</font>"  
+		+ "<br><input type='submit' value='Next' id='next' onClick='newQuestion();' autofocus />";  
+		document.getElementById("record").innerHTML = qNum + ". " +num1+ " - " +num2+ " = " +result + " <font color='blue'>(correct)</font></br>" 
+			+ document.getElementById("record").innerHTML;  
+		document.getElementById("point").innerHTML = parseInt(document.getElementById("point").innerHTML)+1;  
+
+		document.getElementById("num3").disabled = true;
+		// document.getElementById("ok").disabled = true;
+
+//		document.getElementById("ok").onclick = "newQuestion()";
+
+		document.getElementById("ok").value = " Next Question ";
+		document.getElementById("ok").setAttribute("onclick","newQuestion()")
+	}
+	else{
+		document.getElementById("display").innerHTML = "<font color='red'>" +num3+ " is not correct answer! try again.</font>"; 
+		document.getElementById("num3").value = "";
+
+//		+ "<br><input type='submit' value='Next' id='next' onClick='newQuestion();'>";  
+//		document.getElementById("record").innerHTML += qNum + ". " +num1+ " - " +num2+ " = " +num3+ " (<font color='red'>" +result+ "</font>)</br>";  
+	}
+
+
+}
+
+function newQuestion()	
+{
+
+	var num1;
+	var num2;
+	var maxNum1 = 100;
+	var maxNum2 = 100;
+
+	try{
+		var urlParams = new URLSearchParams(location.search);
+		maxNum1 = urlParams.has('num1') ? parseInt(urlParams.get('num1')) : maxNum1;
+		maxNum2 = urlParams.has('num2') ? parseInt(urlParams.get('num2')) : maxNum2;
+		operator = urlParams.has('operator') ? parseInt(urlParams.get('operator')) : operator;
+		timer = urlParams.has('timer') ? parseInt(urlParams.get('timer')) : timer;
+
+		switch(operator)
+		{	
+			case 1:	document.getElementById("operator").innerHTML = " + ";	break;	
+			case 2:	document.getElementById("operator").innerHTML = " - ";	break;	
+			case 3:	document.getElementById("operator").innerHTML = " * ";	break;	
+			case 4:	document.getElementById("operator").innerHTML = " : ";	break;
+		}
+	}
+	catch(err)
+	{	alert(err.message);	}
+
+        var qNum = parseInt(document.getElementById("qNum").innerHTML);
+	document.getElementById("qNum").innerHTML = " " + (qNum+1);
+
+	do{
+		num1 = Math.floor(Math.random() * (maxNum1+1));
+		num2 = Math.floor(Math.random() * (maxNum2+1));
+	}while( !((operator==1) || ((operator==2)&&(num1>=num2)) || (operator==3) || ((operator==4)&&(num1%num2==0))) );
+
+	document.getElementById("num1").innerHTML = ""+num1;
+	document.getElementById("num2").innerHTML = ""+num2;
+	document.getElementById("num3").value = " ";
+	document.getElementById("display").innerHTML = "<br/><br/>";
+	document.getElementById("num3").disabled = false;
+	document.getElementById("num3").focus();
+//	document.getElementById("ok").disabled = false;
+		document.getElementById("ok").value = " OK ";
+		document.getElementById("ok").setAttribute("onclick","calNumber()")
+
+}
+
+// --- main();
+	newQuestion();
+        
+        document.getElementById("num3").onkeypress = function(event){
+        if (event.keyCode == 13 || event.which == 13){
+            calNumber();
+        }
+	};
+
+
+	// Set the date we're counting down to
+	var date = new Date();
+	var countDownDate = new Date(date.getTime() + timer *60000).getTime();
+
+	// Update the count down every 1 second
+	var x = setInterval(function() 
+	{
+  		// Get today's date and time
+		var now = new Date().getTime();
+    
+  		// Find the distance between now and the count down date
+ 		var distance = countDownDate - now;
+    
+  		// Time calculations for days, hours, minutes and seconds
+  		var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  		var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+		// Output the result in an element with id="demo"
+  		document.getElementById("timer").innerHTML =  " Time remain " +hours+ ":" +minutes+ ":" +seconds +" second(s)";
+    
+  		// If the count down is over, write some text 
+  		if (distance < 0) 
+		{
+    			clearInterval(x);
+    			document.getElementById("timer").innerHTML = "Time Up";
+			document.getElementById("num3").disabled = true;
+			document.getElementById("ok").disabled = true;
+			document.getElementById("timer").style.color = 'red';
+
+		}
+  	}, 1000);
+</script>
+
+
+</script>
+
+</body>
+</html>
