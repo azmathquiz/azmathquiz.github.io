@@ -1,0 +1,126 @@
+﻿<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div class="box">
+        <h3>Vocabulary</h3>
+        <input type="text" id="answer" value="" />
+        <input type="button" id="ok" value=" Create List " onclick="addWord()" /><br />
+        <p id="display">Enter new vocabulary list seperate by coma ie.. ( pink, red, blue )</p>
+        <hr />
+        <p id='record'></p>
+    </div>
+    <script>
+        var listWord;
+        var word;
+        var tries = 0;
+        var point = 0;
+        var no = 0;
+        var wordIndex = 0;
+
+        function read(text) {
+            var msg = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(msg);
+        }
+
+        function addWord(element) {
+            var words = document.getElementById('answer').value;
+            document.getElementById("display").innerHTML = "Click 'OK' button to generating quiz";
+            document.getElementById("record").innerHTML = `${words.replace(/,/g, "<br/>")} <br/> <input type='button' value=' OK ' onclick='generateQuiz()' />`;
+            document.getElementById("ok").value = " Change List ";
+        }
+
+        function generateQuiz() {
+            var words = document.getElementById('answer').value;
+            if (!(words.trim() === '')) {
+                //                displayForSecond(words, 10);
+                listWord = words.split(',');
+
+                // should be something righ here.
+                ask();
+                document.getElementById('ok').setAttribute('onclick', 'answer()');
+                document.getElementById('ok').value = ' Answer ';
+                read(word + ".  " + word);
+                document.getElementById("answer").value = "";
+                document.getElementById("record").innerHTML = "<br/>";
+                document.getElementById("display").innerHTML = "Quizing..";
+
+            }
+        }
+
+        function ask() {
+            wordIndex = Math.floor(Math.random() * listWord.length);
+            word = listWord[wordIndex].trim();
+        }
+
+        function answer() {
+            var answer = document.getElementById('answer').value.trim();
+            if (answer.toUpperCase() === word.toUpperCase()) {
+                ask();
+                tries = 0;
+                read("You are correct!     Next word is.  " + word + ".  " + word);
+                displayForSecond("You are correct!", 3);
+                document.getElementById("record").innerHTML += `${++no}. word #${wordIndex} correct  1 point  (${Math.floor(++point/no*100)}%)<br/>`;
+            }
+            else if (answer.toUpperCase() === "") {
+                read(word + ".  " + word);
+            }
+            else if (tries >= 3 - 1) {
+                tries = 0;
+                document.getElementById("record").innerHTML += `${++no}. word #${wordIndex} incorrect  0 point  (${Math.floor(point/no*100)}%)<br/>`;
+                displayForSecond(`The answer is.  ${word}`, 6);
+
+                read(`The answer is.   ${spellWord(word)}.  ${spellWord(word)}.   `);
+
+                // should be something righ here.
+                ask();
+                read("Next word is.  " + word + ".  " + word);
+            }
+            else {
+                read(word + ".  " + word);
+                document.getElementById("display").innerHTML = `Try again. (${++tries})`;
+            }
+            document.getElementById("answer").value = "";
+        }
+
+        function displayForSecond(msg, second) {
+            document.getElementById("display").innerHTML = msg;
+            setTimeout(function () {
+                document.getElementById("display").innerHTML = "Quizing..";
+            }, second * 1000);
+        }
+
+        function spellWord(word) {
+            var result = "";
+            word.split('').forEach(function (item) {
+                result += item + ", ";
+            });
+            return result;
+        }
+
+
+    </script>
+
+</body>
+
+<style>
+    body
+    {
+        background-color:DarkGray;
+        display:table;
+    } 
+    h3{
+        text-align:center;
+    }
+
+    .box
+    {
+
+        display:table-cell;
+         
+        text-align: center;
+    }
+</style>
+</html>
