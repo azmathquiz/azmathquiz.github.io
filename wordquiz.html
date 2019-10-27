@@ -20,6 +20,13 @@
         var no = 0;
         var wordIndex = 0;
 
+        document.getElementById("answer").onkeypress = function(event){
+            if (event.keyCode == 13 || event.which == 13){
+                addWord();
+            }
+	    };
+
+
         function read(text) {
             var msg = new SpeechSynthesisUtterance(text);
             window.speechSynthesis.speak(msg);
@@ -30,6 +37,8 @@
             document.getElementById("display").innerHTML = "Click 'OK' button to generating quiz";
             document.getElementById("record").innerHTML = `${words.replace(/,/g, "<br/>")} <br/> <input type='button' value=' OK ' onclick='generateQuiz()' />`;
             document.getElementById("ok").value = " Change List ";
+            //document.getElementById("answer").type = "text";
+
         }
 
         function generateQuiz() {
@@ -40,12 +49,19 @@
 
                 // should be something righ here.
                 ask();
+
+                document.getElementById("answer").onkeypress = function (event) {
+                    if (event.keyCode == 13 || event.which == 13) {
+                        answer();
+                    }
+                };
+
                 document.getElementById('ok').setAttribute('onclick', 'answer()');
                 document.getElementById('ok').value = ' Answer ';
                 read(word + ".  " + word);
                 document.getElementById("answer").value = "";
                 document.getElementById("record").innerHTML = "<br/>";
-                document.getElementById("display").innerHTML = "Quizing..";
+                document.getElementById("display").innerHTML = `<input type='button' value=' Listen ' onclick='read("${word}")' />`;
 
             }
         }
@@ -80,15 +96,18 @@
             }
             else {
                 read(word + ".  " + word);
-                document.getElementById("display").innerHTML = `Try again. (${++tries})`;
+                document.getElementById("display").innerHTML = `Try again. (${++tries}) <input type='button' value=' Listen ' onclick='read("${word}")' />`;;
             }
             document.getElementById("answer").value = "";
+            document.getElementById("answer").focus();
         }
 
         function displayForSecond(msg, second) {
             document.getElementById("display").innerHTML = msg;
             setTimeout(function () {
-                document.getElementById("display").innerHTML = "Quizing..";
+//                document.getElementById("display").innerHTML = "Quizing..";
+                document.getElementById("display").innerHTML = `<input type='button' value=' Listen ' onclick='read("${word}")' />`;
+
             }, second * 1000);
         }
 

@@ -31,20 +31,20 @@ function calNumber()
         var num3 = parseInt(document.getElementById("num3").value);     
 
         var result = num1 - num2;
-
+        var op = "-"
 	switch(operator)
 	{	
-		case 1:	result = num1 + num2;	break;	
-		case 2:	result = num1 - num2;	break;	
-		case 3:	result = num1 * num2;	break;	
-		case 4:	result = num1 / num2;	break;	
+        case 1: result = num1 + num2; op = "+"; break;	
+        case 2: result = num1 - num2; op = "-"; break;	
+		case 3:	result = num1 * num2; op = "*"; break;	
+		case 4:	result = num1 / num2; op = ":"; break;	
 	}
 
 	if (result == num3){
 		document.getElementById("display").innerHTML = "<font color='blue'>Good Job!</font>"  
-		+ "<br><input type='submit' value='Next' id='next' onClick='newQuestion();' autofocus />";  
-		document.getElementById("record").innerHTML = qNum + ". " +num1+ " - " +num2+ " = " +result + " <font color='blue'>(correct)</font></br>" 
-			+ document.getElementById("record").innerHTML;  
+            + "<br><input type='submit' value='Next' id='next' onClick='newQuestion();' autofocus />";  
+        document.getElementById("record").innerHTML = `${qNum}.  ${num1} ${op} ${num2} = ${result}  <font color="blue">(correct)</font></br>
+            ${document.getElementById("record").innerHTML}`;
 		document.getElementById("point").innerHTML = parseInt(document.getElementById("point").innerHTML)+1;  
 
 		document.getElementById("num3").disabled = true;
@@ -68,9 +68,7 @@ function calNumber()
 
 function newQuestion()	
 {
-
-	var num1;
-	var num2;
+	var num1, num2;
 	var maxNum1 = 100;
 	var maxNum2 = 100;
 
@@ -115,7 +113,7 @@ function newQuestion()
 // --- main();
 	newQuestion();
         
-        document.getElementById("num3").onkeypress = function(event){
+    document.getElementById("num3").onkeypress = function(event){
         if (event.keyCode == 13 || event.which == 13){
             calNumber();
         }
@@ -157,8 +155,6 @@ function newQuestion()
   	}, 1000);
 </script>
 
-
-</script>
 
 </body>
 </html>
